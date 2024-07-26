@@ -2,67 +2,60 @@
 
 Task::Task()
 {
-   parentTask = nullptr;
-   isUrgent = false;
    name = "";
    description = "";
-   updateDate(0);
-   updateDate(1);
+   creationDate = getCurrentDate();
 }
 
-Task::Task(Task* parent)
+Task::Task(int parent)
 {
-   parentTask = parent;
+   parentTaskID = parent;
 }
 
 Task::~Task()
 {
-   delete parentTask;
-   parentTask = nullptr;
-
-   for (std::vector<Task*>::iterator it = childrenTasks.begin(); it != childrenTasks.end(); ++it)
-   {
-      delete *it;
-      *it = nullptr;
-   }
 }
 
-void Task::updateTask(nlohmann::json givenData, TaskOptions to)
+void Task::updateTask(nlohmann::json givenData)
 {
-   if (to == TaskOptions::EDIT)
-   {
-      isUrgent = givenData["isUrgent"];
-      name = givenData["name"];
-      parentTaskID = givenData["parentTaskID"];
-      description = givenData["description"];
-      creationDate.yyyy = givenData["creationDate"]["yyyy"];
-      creationDate.mm = givenData["creationDate"]["mm"];
-      creationDate.dd = givenData["creationDate"]["dd"];
-      lastModified.yyyy = givenData["lastModified"]["yyyy"];
-      lastModified.mm = givenData["lastModified"]["mm"];
-      lastModified.dd = givenData["lastModified"]["dd"];
-      deadlineDate.yyyy = givenData["deadlineDate"]["yyyy"];
-      deadlineDate.mm = givenData["deadlineDate"]["mm"];
-      deadlineDate.dd = givenData["deadlineDate"]["dd"];
-      expectedDaysLeft = givenData["expectedDaysLeft"];
-   }
+   lastModified = getCurrentDate();
+   taskId = givenData["taskID"];
+   name = givenData["name"];
+   description = givenData["description"];
+   creationDate = givenData["creationDate"];
+   deadlineDate = givenData["deadlineDate"];
+   parentTaskID = givenData["parentTaskID"];
+
+   childrenTaskIDs.clear();
+   for (auto it = givenData["childrenTaskIDs"].begin(); it != givenData["childrenTaskIDs"].end(); ++it)
+      childrenTaskIDs.push_back(*it);
 }
 
-void Task::updateDate(int whichDate)
+nlohmann::json Task::getData() const
 {
+   nlohmann::json data;
+   data["taskID"] = taskId;
+   data["name"] = name;
+   data["description"] = description;
+   data["creationDate"] = creationDate;
+   data["deadlineDate"] = deadlineDate;
+   data["lastModified"] = lastModified;
+   data["parentTaskID"] = parentTaskID;
+   data["childrenTaskIDs"] = childrenTaskIDs;
+   return data;
+}
+
+std::string Task::getCurrentDate()
+{
+   std::string date = "";
    time_t now = time(0);
    tm *ltm = localtime(&now);
 
-   if (whichDate)
-   {
-      creationDate.yyyy = ltm->tm_year;
-      creationDate.mm = ltm->tm_mon + 1;
-      creationDate.dd = ltm->tm_mday;
-   }
-   else
-   {
-      lastModified.yyyy = ltm->tm_year;
-      lastModified.mm = ltm->tm_mon + 1;
-      lastModified.dd = ltm->tm_mday;
-   }
+   date += std::to_string(ltm->tm_mon + 1);
+   date += "/";
+   date += std::to_string(ltm->tm_mday);
+   date += "/";
+   date += std::to_string(ltm->tm_year);
+
+   return date;
 }

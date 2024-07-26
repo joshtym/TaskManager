@@ -13,22 +13,21 @@ class Task
 {
 public:
    Task();
-   Task(Task*);
+   Task(int);
    ~Task();
-   void updateTask(nlohmann::json, TaskOptions);
+   void updateTask(nlohmann::json);
+   nlohmann::json getData() const;
 private:
-   void updateDate(int);
-   bool isUrgent;
+   std::string getCurrentDate();
+   int taskId;
    std::string name;
    std::string description;
-   Date creationDate;
-   Date deadlineDate;
-   Date lastModified;
+   std::string creationDate;
+   std::string deadlineDate;
+   std::string lastModified;
    int expectedDaysLeft;
    int parentTaskID;
-
-   Task* parentTask;
-   std::vector<Task*> childrenTasks;
+   std::vector<int> childrenTaskIDs;
 };
 
 #endif

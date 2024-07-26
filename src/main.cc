@@ -7,7 +7,15 @@
 
 int main(int argc, char** argv)
 {
-   DataHandler dh;
-   dh.loadData("test.tskmgr");
+   std::string fileName;
+   std::cout << "Filename?: ";
+   while (std::cin >> fileName)
+   {
+      DataHandler dh;
+      dh.loadData(fileName);
+
+      std::cout << "Filename?: ";
+   }
+
    return 0;
 }
