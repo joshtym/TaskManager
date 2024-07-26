@@ -27,21 +27,25 @@ Task::~Task()
    }
 }
 
-void Task::updateTask(nlohmann::json givenData)
+void Task::updateTask(nlohmann::json givenData, TaskOptions to)
 {
-   isUrgent = givenData["isUrgent"];
-   name = givenData["name"];
-   description = givenData["description"];
-   creationDate.yyyy = givenData["creationDate"]["yyyy"];
-   creationDate.mm = givenData["creationDate"]["mm"];
-   creationDate.dd = givenData["creationDate"]["dd"];
-   lastModified.yyyy = givenData["lastModified"]["yyyy"];
-   lastModified.mm = givenData["lastModified"]["mm"];
-   lastModified.dd = givenData["lastModified"]["dd"];
-   deadlineDate.yyyy = givenData["deadlineDate"]["yyyy"];
-   deadlineDate.mm = givenData["deadlineDate"]["mm"];
-   deadlineDate.dd = givenData["deadlineDate"]["dd"];
-   expectedDaysLeft = givenData["expectedDaysLeft"];
+   if (to == TaskOptions::EDIT)
+   {
+      isUrgent = givenData["isUrgent"];
+      name = givenData["name"];
+      parentTaskID = givenData["parentTaskID"];
+      description = givenData["description"];
+      creationDate.yyyy = givenData["creationDate"]["yyyy"];
+      creationDate.mm = givenData["creationDate"]["mm"];
+      creationDate.dd = givenData["creationDate"]["dd"];
+      lastModified.yyyy = givenData["lastModified"]["yyyy"];
+      lastModified.mm = givenData["lastModified"]["mm"];
+      lastModified.dd = givenData["lastModified"]["dd"];
+      deadlineDate.yyyy = givenData["deadlineDate"]["yyyy"];
+      deadlineDate.mm = givenData["deadlineDate"]["mm"];
+      deadlineDate.dd = givenData["deadlineDate"]["dd"];
+      expectedDaysLeft = givenData["expectedDaysLeft"];
+   }
 }
 
 void Task::updateDate(int whichDate)

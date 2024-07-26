@@ -5,6 +5,7 @@
 #include <string>
 #include "addressBook.h"
 #include "task.h"
+#include "json.h"
 
 class DataHandler
 {
@@ -12,6 +13,7 @@ public:
    DataHandler();
    ~DataHandler();
    int loadData(std::string);
+   int addTask(nlohmann::json);
 private:
    sqlite3 *db;
    int currSqlFlag;
