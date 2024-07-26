@@ -13,6 +13,7 @@ public:
    DataHandler();
    ~DataHandler();
    int loadData(std::string);
+   void createTables(std::string);
    void addTask(Task);
    void editTask(nlohmann::json);
    void deleteTask(int);
